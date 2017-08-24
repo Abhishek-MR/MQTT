@@ -10,11 +10,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:onClick="pub"
+        android:id="@+id/pubBut1"
         android:text="button"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pubBut1"
+        android:layout_centerInParent="true"
+        android:id="@+id/pubBut2"
+        android:text="button"/>
+
+
     <TextView
-        android:id="@+id/dataReceived"
+        android:id="@+id/dataReceived1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
@@ -22,7 +31,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.192" />
+        app:layout_constraintVertical_bias="0.192"
+        />
+
+    <TextView
+        android:id="@+id/dataReceived2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        android:layout_alignParentRight="true">
+
+    </TextView>
 
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,16 +20,30 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 
 
 import helpers.MqttHelper;
+import helpers.MqttHelper1;
 
 
 public class MainActivity extends AppCompatActivity {
     MqttHelper mqttHelper;
+    MqttHelper1 mqttHelper1;
 
-    TextView dataReceived;
+    // values to publish
+
     static String HOSTNAME = "tcp://m11.cloudmqtt.com:16201";
     static String USERNAME = "rcduaeoh";
     static String PASSWORD = "hm3O7P_0KiXi";
-    String TOPIC = "sensor/snd";
+    String TOPIC1 = "sensor/snd";
+    String TOPIC2 = "sensor/rec";
+    String MSG = "NULL";
+
+    Button pubbut1 ;
+    Button pubbut2 ;
+
+    TextView dataReceived1;
+    TextView dataReceived2;
+
+    int i=0;
+
 
     MqttAndroidClient client;
 
@@ -38,9 +53,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dataReceived = (TextView) findViewById(R.id.dataReceived);
+        dataReceived1 = (TextView) findViewById(R.id.dataReceived1);
+        dataReceived2 = (TextView) findViewById(R.id.dataReceived2);
+
+        pubbut1 = (Button) findViewById(R.id.pubBut1);
+        pubbut2 = (Button) findViewById(R.id.pubBut2);
+
+
+
+        pubbut1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i++;
+                pub(TOPIC1,MSG+i);
+            }
+        });
+
+        pubbut2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pub(TOPIC2,MSG+1);
+            }
+        });
 
         startMqtt();
+        startMqtt2();
 
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), HOSTNAME, clientId);
@@ -74,10 +111,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void pub(View view){
-
-        String topic = TOPIC;
-        String message = "sfjsf";
+    // function to publish
+    public void pub(String topic, String message){
 
         try {
 
@@ -88,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // function to subscribe
     private void startMqtt() {
         mqttHelper = new MqttHelper(getApplicationContext());
         mqttHelper.setCallback(new MqttCallbackExtended() {
@@ -104,7 +140,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Debug", mqttMessage.toString());
-                dataReceived.setText(mqttMessage.toString());
+                dataReceived1.setText(mqttMessage.toString());
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+            }
+        });
+    }
+
+    private void startMqtt2() {
+        mqttHelper1 = new MqttHelper1(getApplicationContext());
+        mqttHelper1.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean b, String s) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable throwable) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                Log.w("Debug", mqttMessage.toString());
+                dataReceived2.setText(mqttMessage.toString());
             }
 
             @Override
